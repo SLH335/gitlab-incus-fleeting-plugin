@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/joho/godotenv"
@@ -39,6 +41,12 @@ func (i *incusDeployment) Shutdown(ctx context.Context) error {
 }
 
 func main() {
+	if len(os.Args) != 2 {
+		fmt.Println("Provide a container name")
+		return
+	}
+	name := strings.ToLower(os.Args[1])
+
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Printf("Error loading .env file: %v", err)
@@ -52,7 +60,6 @@ func main() {
 	}
 	fmt.Println("Connected to Incus")
 
-	name := "test2"
 	err = CreateContainer(c, name)
 	if err != nil {
 		fmt.Printf("Error creating container %s: %v\n", name, err)
