@@ -77,3 +77,36 @@ func StartContainer(c incus.InstanceServer, name string) error {
 
 	return nil
 }
+
+func DeleteContainer(c incus.InstanceServer, name string) error {
+	op, err := c.DeleteInstance(name)
+	if err != nil {
+		return err
+	}
+
+	err = op.Wait()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func StopContainer(c incus.InstanceServer, name string) error {
+	reqState := api.InstanceStatePut{
+		Action:  "stop",
+		Timeout: -1,
+	}
+
+	op, err := c.UpdateInstanceState(name, reqState, "")
+	if err != nil {
+		return err
+	}
+
+	err = op.Wait()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

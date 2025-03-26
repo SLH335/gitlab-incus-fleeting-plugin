@@ -60,6 +60,7 @@ func main() {
 	}
 	fmt.Println("Connected to Incus")
 
+	fmt.Println("Creating container...")
 	err = CreateContainer(c, name)
 	if err != nil {
 		fmt.Printf("Error creating container %s: %v\n", name, err)
@@ -67,12 +68,32 @@ func main() {
 	}
 	fmt.Printf("Created container %s\n", name)
 
+	fmt.Println("Starting container...")
 	err = StartContainer(c, name)
 	if err != nil {
 		fmt.Printf("Error starting container %s: %v\n", name, err)
 		return
 	}
 	fmt.Printf("Started container %s\n", name)
+
+	fmt.Println("Press [Enter] key to delete the container")
+	fmt.Scanf("%s")
+
+	fmt.Println("Stopping container...")
+	err = StopContainer(c, name)
+	if err != nil {
+		fmt.Printf("Error stopping container %s: %v\n", name, err)
+		return
+	}
+	fmt.Printf("Stopped container %s\n", name)
+
+	fmt.Println("Deleting container...")
+	err = DeleteContainer(c, name)
+	if err != nil {
+		fmt.Printf("Error deleting container %s: %v\n", name, err)
+		return
+	}
+	fmt.Printf("Deleted container %s\n", name)
 
 	//plugin.Serve(&incusDeployment{})
 }
