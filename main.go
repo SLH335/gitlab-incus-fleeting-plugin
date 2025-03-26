@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/go-hclog"
-	"gitlab.com/gitlab-org/fleeting/fleeting/plugin"
 	"gitlab.com/gitlab-org/fleeting/fleeting/provider"
 )
 
@@ -38,5 +38,27 @@ func (i *incusDeployment) Shutdown(ctx context.Context) error {
 }
 
 func main() {
-	plugin.Serve(&incusDeployment{})
+	//plugin.Serve(&incusDeployment{})
+
+	c, err := Connect()
+	if err != nil {
+		fmt.Printf("Error connecting to Incus: %v\n", err)
+		return
+	}
+	fmt.Println("Connected to Incus")
+
+	name := "test2"
+	err = CreateContainer(c, name)
+	if err != nil {
+		fmt.Printf("Error creating container %s: %v\n", name, err)
+		return
+	}
+	fmt.Printf("Created container %s\n", name)
+
+	err = StartContainer(c, name)
+	if err != nil {
+		fmt.Printf("Error starting container %s: %v\n", name, err)
+		return
+	}
+	fmt.Printf("Started container %s\n", name)
 }
