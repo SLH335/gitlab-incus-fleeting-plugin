@@ -1,12 +1,31 @@
 package main
 
 import (
+	"os"
+
 	"github.com/lxc/incus/client"
 	"github.com/lxc/incus/shared/api"
 )
 
 func Connect() (incus.InstanceServer, error) {
-	c, err := incus.ConnectIncusUnix("", nil)
+	url := os.Getenv("INCUS_URL")
+
+	clientCertPath := os.Getenv("CLIENT_CERT_PATH")
+	clientKeyPath := os.Getenv("CLIENT_KEY_PATH")
+	serverCertPath := os.Getenv("SERVER_CERT_PATH")
+
+	clientCert, clientKey, serverCert, err := loadCerts(clientCertPath, clientKeyPath, serverCertPath)
+	if err != nil {
+		return nil, err
+	}
+
+	args := incus.ConnectionArgs{
+		TLSClientCert: clientCert,
+		TLSClientKey:  clientKey,
+		TLSServerCert: serverCert,
+	}
+
+	c, err := incus.ConnectIncus(url, &args)
 	if err != nil {
 		return nil, err
 	}

@@ -4,6 +4,7 @@ go 1.24.1
 
 require (
 	github.com/hashicorp/go-hclog v1.6.3
+	github.com/joho/godotenv v1.5.1
 	github.com/lxc/incus v0.7.0
 	gitlab.com/gitlab-org/fleeting/fleeting v0.0.0-20250116074924-5d69933ca3b8
 )

@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/go-hclog"
+	"github.com/joho/godotenv"
 	"gitlab.com/gitlab-org/fleeting/fleeting/provider"
 )
 
@@ -38,7 +39,11 @@ func (i *incusDeployment) Shutdown(ctx context.Context) error {
 }
 
 func main() {
-	//plugin.Serve(&incusDeployment{})
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Printf("Error loading .env file: %v", err)
+		return
+	}
 
 	c, err := Connect()
 	if err != nil {
@@ -61,4 +66,6 @@ func main() {
 		return
 	}
 	fmt.Printf("Started container %s\n", name)
+
+	//plugin.Serve(&incusDeployment{})
 }
